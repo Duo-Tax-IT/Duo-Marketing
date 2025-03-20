@@ -3,8 +3,12 @@
 ## Project Overview
 A web app for managing marketing tasks and projects, built with Next.js and Tailwind CSS.
 
-markdown
-Copy
+## Project Setup
+- **Next.js Setup:**
+  - Created with `create-next-app` using TypeScript, Tailwind CSS, and App Router
+  - Using src directory structure (`/src/app` and `/src/components`)
+  - Import alias configured as `@/*` for clean imports
+  - Currently displays basic "Duo Marketing" homepage
 
 ## API Integration
 - **Salesforce/Middleman API:**  
