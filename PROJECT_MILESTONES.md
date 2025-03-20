@@ -5,7 +5,7 @@ A task/project management web app for the marketing team with plans for future f
 
 ## Milestones
 1. **Next.js Setup:**  
-   - Create a Next.js app with homepage text "Duo Marketing"❌
+   - Create a Next.js app with homepage text "Duo Marketing"✅
    - Verify basic UI renders correctly.❌
 2. **Deployment:**  
    - Deploy frontend on Vercel.❌
@@ -20,4 +20,4 @@ A task/project management web app for the marketing team with plans for future f
 ## Iterative Process
 - **After Each Session:** Update this file with completed milestones and mark it with ✅. Also add new milestones as they come in.
 - **After Each Feature:** Update DOCUMENTATION.md after each feature to ensure you remember the new feature and how it interacts with the rest of the code base.
-- **Checkpoint Prompts:** Use “@Take a Breath” and “Get up to speed” prompts to ensure documentation is current before starting a new feature.
+- **Checkpoint Prompts:** Use "@Take a Breath" and "Get up to speed" prompts to ensure documentation is current before starting a new feature.
