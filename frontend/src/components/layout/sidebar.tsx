@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { name: "Dashboard", href: "/" },
   { name: "Projects", href: "/projects" },
+  { name: "Website Content", href: "/content" },
   { name: "Tasks", href: "/tasks" },
 ];
 
@@ -13,8 +14,8 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-[calc(100vh-4rem)] w-64 flex-col border-r border-gray-200 bg-white">
-      <nav className="flex flex-1 flex-col gap-1 p-4">
+    <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
+      <nav className="flex flex-1 flex-col gap-1 p-4 sticky top-0">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (

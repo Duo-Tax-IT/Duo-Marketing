@@ -1,23 +1,192 @@
-PS C:\Users\David\MyCode\Duo Marketing\frontend> npm install @azure/msal-browser @azure/msal-react next-auth  
-npm ERR! code ERESOLVE
-npm ERR! ERESOLVE unable to resolve dependency tree    
-npm ERR!
-npm ERR! While resolving: frontend@0.1.0
-npm ERR! Found: react@19.0.0
-npm ERR! node_modules/react
-npm ERR!   react@"^19.0.0" from the root project       
-npm ERR!
-npm ERR! Could not resolve dependency:
-npm ERR! peer react@"^16.8.0 || ^17 || ^18" from @azure/msal-react@3.0.7
-npm ERR! node_modules/@azure/msal-react
-npm ERR!   @azure/msal-react@"*" from the root project 
-npm ERR!
-npm ERR! Fix the upstream dependency conflict, or retry
-npm ERR! this command with --force or --legacy-peer-deps
-npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
-npm ERR!
-npm ERR!
-npm ERR! For a full report see:
-npm ERR! C:\Users\David\AppData\Local\npm-cache\_logs\2025-03-21T00_23_09_298Z-eresolve-report.txt
+page.tsx:28 
+  Server  Error fetching projects: Error: Failed to fetch projects: 401 Unauthorized - {"error":"Unauthorized - No access token"}
+    at getProjects (page.tsx:22:13)
+    at async ProjectsList (page.tsx:38:20)
+getProjects	@	page.tsx:28
+async ProjectsList	@	page.tsx:38
+<ProjectsList>		
+ProjectsPage	@	page.tsx:59
+error-boundary-callbacks.ts:80 
+ Error: Failed to fetch projects: 401 Unauthorized - {"error":"Unauthorized - No access token"}
+    at getProjects (page.tsx:29:11)
+    at async ProjectsList (page.tsx:38:20)
 
-npm ERR! A complete log of this run can be found in: C:\Users\David\AppData\Local\npm-cache\_logs\2025-03-21T00_23_09_298Z-debug-0.log
+
+The above error occurred in the <ProjectsList> component. It was handled by the <ErrorBoundaryHandler> error boundary.
+onCaughtError	@	error-boundary-callbacks.ts:80
+logCaughtError	@	react-dom-client.development.js:7793
+runWithFiberInDEV	@	react-dom-client.development.js:1513
+update.callback	@	react-dom-client.development.js:7826
+callCallback	@	react-dom-client.development.js:4588
+commitCallbacks	@	react-dom-client.development.js:4608
+runWithFiberInDEV	@	react-dom-client.development.js:1510
+commitClassCallbacks	@	react-dom-client.development.js:10676
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11283
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11322
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11322
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11211
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11206
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11388
+recursivelyTraverseLayoutEffects	@	react-dom-client.development.js:12194
+commitLayoutEffectOnFiber	@	react-dom-client.development.js:11288
+flushLayoutEffects	@	react-dom-client.development.js:15546
+commitRoot	@	react-dom-client.development.js:15389
+commitRootWhenReady	@	react-dom-client.development.js:14643
+performWorkOnRoot	@	react-dom-client.development.js:14566
+performWorkOnRootViaSchedulerTask	@	react-dom-client.development.js:16274
+performWorkUntilDeadline	@	scheduler.development.js:45
+<ErrorBoundaryHandler>		
+exports.jsx	@	react-jsx-runtime.development.js:319
+ErrorBoundary	@	error-boundary.tsx:209
+react-stack-bottom-frame	@	react-dom-client.development.js:23949
+renderWithHooksAgain	@	react-dom-client.development.js:5178
+renderWithHooks	@	react-dom-client.development.js:5090
+updateFunctionComponent	@	react-dom-client.development.js:8327
+beginWork	@	react-dom-client.development.js:9944
+runWithFiberInDEV	@	react-dom-client.development.js:1510
+performUnitOfWork	@	react-dom-client.development.js:15119
+workLoopConcurrentByScheduler	@	react-dom-client.development.js:15113
+renderRootConcurrent	@	react-dom-client.development.js:15088
+performWorkOnRoot	@	react-dom-client.development.js:14409
+performWorkOnRootViaSchedulerTask	@	react-dom-client.development.js:16274
+performWorkUntilDeadline	@	scheduler.development.js:45
+<ErrorBoundary>		
+exports.jsx	@	react-jsx-runtime.development.js:319
+OuterLayoutRouter	@	layout-router.tsx:595
+react-stack-bottom-frame	@	react-dom-client.development.js:23949
+renderWithHooksAgain	@	react-dom-client.development.js:5178
+renderWithHooks	@	react-dom-client.development.js:5090
+updateFunctionComponent	@	react-dom-client.development.js:8327
+beginWork	@	react-dom-client.development.js:9893
+runWithFiberInDEV	@	react-dom-client.development.js:1510
+performUnitOfWork	@	react-dom-client.development.js:15119
+workLoopConcurrentByScheduler	@	react-dom-client.development.js:15113
+renderRootConcurrent	@	react-dom-client.development.js:15088
+performWorkOnRoot	@	react-dom-client.development.js:14409
+performWorkOnRootViaSchedulerTask	@	react-dom-client.development.js:16274
+performWorkUntilDeadline	@	scheduler.development.js:45
+"use client"		
+(anonymous)	@	react-server-dom-tur…development.js:2327
+initializeModelChunk	@	react-server-dom-tur…development.js:1027
+resolveModelChunk	@	react-server-dom-tur…development.js:1004
+resolveModel	@	react-server-dom-tur…development.js:1572
+processFullStringRow	@	react-server-dom-tur…development.js:2261
+processFullBinaryRow	@	react-server-dom-tur…development.js:2206
+progress	@	react-server-dom-tur…development.js:2452
+"use server"		
+ResponseInstance	@	react-server-dom-tur…development.js:1560
+createResponseFromOptions	@	react-server-dom-tur…development.js:2369
+exports.createFromReadableStream	@	react-server-dom-tur…development.js:2681
+[project]/node_modules/next/dist/client/app-index.js [app-client] (ecmascript)	@	app-index.tsx:158
+(anonymous)	@	dev-base.ts:205
+runModuleExecutionHooks	@	dev-base.ts:265
+instantiateModule	@	dev-base.ts:203
+getOrInstantiateModuleFromParent	@	dev-base.ts:132
+commonJsRequire	@	runtime-utils.ts:241
+(anonymous)	@	app-next-turbopack.ts:9
+(anonymous)	@	app-bootstrap.ts:78
+loadScriptsInSequence	@	app-bootstrap.ts:20
+appBootstrap	@	app-bootstrap.ts:60
+[project]/node_modules/next/dist/client/app-next-turbopack.js [app-client] (ecmascript)	@	app-next-turbopack.ts:8
+(anonymous)	@	dev-base.ts:205
+runModuleExecutionHooks	@	dev-base.ts:265
+instantiateModule	@	dev-base.ts:203
+getOrInstantiateRuntimeModule	@	dev-base.ts:101
+registerChunk	@	runtime-backend-dom.ts:85
+await in registerChunk		
+registerChunk	@	runtime-base.ts:329
+(anonymous)	@	dev-backend-dom.ts:127
+(anonymous)	@	dev-backend-dom.ts:127

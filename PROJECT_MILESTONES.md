@@ -15,7 +15,9 @@ A task/project management web app for the marketing team with plans for future f
 4. **Core Components:**  
    - Homepage basic. ✅
    - Develop navbar, sidebar, and other shared UI elements.❌
-5. **Future Enhancements:**  
+5. **Pulling in data:**  
+   - Pull in Projects ❌
+6. **Future Enhancements:**  
    - Iteratively add features (e.g., advanced task management, analytics, etc.).❌
 
 ## Iterative Process
