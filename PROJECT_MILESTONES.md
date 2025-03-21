@@ -8,8 +8,8 @@ A task/project management web app for the marketing team with plans for future f
    - Create a Next.js app with homepage text "Duo Marketing"✅
    - Verify basic UI renders correctly.✅
 2. **Deployment:**  
-   - Deploy frontend on Vercel.❌
-   - Deploy backend (API integration with Salesforce via Middleman API) on Render.❌
+   - Deploy frontend on Vercel.✅
+   - Deploy backend (API integration with Salesforce via Middleman API) on Render.🔄
 3. **SSO Integration:**  
    - Implement Microsoft Single Sign-On.❌
 4. **Core Components:**  

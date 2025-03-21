@@ -10,6 +10,22 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Import alias configured as `@/*` for clean imports
   - Currently displays basic "Duo Marketing" homepage
 
+- **Backend Setup:**
+  - Node.js Express server with TypeScript
+  - Runs on port 3001 (configured in .env)
+  - Environment variables stored in .env file (not committed to Git)
+  - API proxy for Salesforce integration
+
+## Backend API Endpoints
+- **Health Check:**
+  - `GET /api/health`
+  - Returns server status
+
+- **Salesforce Query Proxy:**
+  - `POST /api/salesforce/query`
+  - Requires JSON body with `query` parameter
+  - Proxies requests to Salesforce Middleman API with proper authentication
+
 ## API Integration
 - **Salesforce/Middleman API:**  
   Details on authentication, endpoints, and data models.
