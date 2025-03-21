@@ -6,59 +6,67 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useQuery } from '@tanstack/react-query';
 
 interface ContentItem {
   Id: string;
   Name: string;
 }
 
+async function fetchContent(token: string): Promise<ContentItem[]> {
+  if (!token) return [];
+  
+  const res = await fetch('/api/content', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || `Failed to fetch content: ${res.status} ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  return data.records as ContentItem[];
+}
+
 export default function ContentPage() {
-  const { data: session, status } = useSession();
-  const [content, setContent] = useState<ContentItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchContent() {
-      if (status !== 'authenticated' || !session?.accessToken) {
-        console.log('Session not ready:', { status, hasToken: !!session?.accessToken });
-        return;
-      }
-
-      try {
-        console.log('Fetching content items...');
-        const res = await fetch('/api/content');
-        
-        if (!res.ok) {
-          const errorData = await res.json();
-          console.error('Error response:', { 
-            status: res.status, 
-            statusText: res.statusText,
-            errorData 
-          });
-          throw new Error(errorData.error || `Failed to fetch content: ${res.status} ${res.statusText}`);
-        }
-
-        const data = await res.json();
-        console.log('Content data:', data);
-        setContent(data.records || []);
-      } catch (error) {
-        console.error('Error in fetchContent:', error);
-        setError(error instanceof Error ? error.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      return;
     }
+  });
 
-    if (status === 'authenticated') {
-      fetchContent();
-    } else if (status === 'unauthenticated') {
-      setError('Please sign in to view content');
-      setLoading(false);
-    }
-  }, [status, session]);
+  const { data: content, error, isLoading } = useQuery<ContentItem[], Error>({
+    queryKey: ['content', session?.accessToken],
+    queryFn: () => fetchContent(session?.accessToken || ''),
+    enabled: !!session?.accessToken,
+    staleTime: Infinity, // Never consider the data stale
+    gcTime: 1000 * 60 * 30, // Keep cache for 30 minutes
+  });
+
+  // Early return for loading state
+  if (!session) {
+    return (
+      <SessionCheck>
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <div className="flex flex-1 flex-grow">
+            <Sidebar />
+            <main className="flex-1 p-8 min-h-[calc(100vh-4rem)] bg-gray-50">
+              <div className="max-w-7xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8">Website Content</h1>
+                <div>Loading...</div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </SessionCheck>
+    );
+  }
 
   return (
     <SessionCheck>
@@ -69,15 +77,15 @@ export default function ContentPage() {
           <main className="flex-1 p-8 min-h-[calc(100vh-4rem)] bg-gray-50">
             <div className="max-w-7xl mx-auto">
               <h1 className="text-3xl font-bold mb-8">Website Content</h1>
-              {status === 'loading' || loading ? (
+              {isLoading ? (
                 <div>Loading content...</div>
               ) : error ? (
-                <div className="text-red-500">Error: {error}</div>
-              ) : content.length === 0 ? (
+                <div className="text-red-500">Error: {error instanceof Error ? error.message : 'Failed to load content'}</div>
+              ) : !content?.length ? (
                 <div>No pending content found.</div>
               ) : (
                 <div className="space-y-4">
-                  {content.map((item) => (
+                  {content.map((item: ContentItem) => (
                     <Card key={item.Id} className="w-full mb-4 hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">

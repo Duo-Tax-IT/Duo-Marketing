@@ -6,59 +6,69 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 interface Task {
   Id: string;
   Name: string;
 }
 
+async function fetchTasks(token: string): Promise<Task[]> {
+  if (!token) return [];
+  
+  const res = await fetch('/api/tasks', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || `Failed to fetch tasks: ${res.status} ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  return data.records as Task[];
+}
+
 export default function TasksPage() {
-  const { data: session, status } = useSession();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchTasks() {
-      if (status !== 'authenticated' || !session?.accessToken) {
-        console.log('Session not ready:', { status, hasToken: !!session?.accessToken });
-        return;
-      }
-
-      try {
-        console.log('Fetching tasks...');
-        const res = await fetch('/api/tasks');
-        
-        if (!res.ok) {
-          const errorData = await res.json();
-          console.error('Error response:', { 
-            status: res.status, 
-            statusText: res.statusText,
-            errorData 
-          });
-          throw new Error(errorData.error || `Failed to fetch tasks: ${res.status} ${res.statusText}`);
-        }
-
-        const data = await res.json();
-        console.log('Tasks data:', data);
-        setTasks(data.records || []);
-      } catch (error) {
-        console.error('Error in fetchTasks:', error);
-        setError(error instanceof Error ? error.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      // Handle unauthenticated state - the SessionCheck component will handle the redirect
+      return;
     }
+  });
 
-    if (status === 'authenticated') {
-      fetchTasks();
-    } else if (status === 'unauthenticated') {
-      setError('Please sign in to view tasks');
-      setLoading(false);
-    }
-  }, [status, session]);
+  const { data: tasks, error, isLoading } = useQuery<Task[], Error>({
+    queryKey: ['tasks', session?.accessToken],
+    queryFn: () => fetchTasks(session?.accessToken || ''),
+    enabled: !!session?.accessToken,
+    staleTime: Infinity, // Never consider the data stale
+    gcTime: 1000 * 60 * 30, // Keep cache for 30 minutes
+  });
+
+  // Early return for loading state
+  if (!session) {
+    return (
+      <SessionCheck>
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <div className="flex flex-1 flex-grow">
+            <Sidebar />
+            <main className="flex-1 p-8 min-h-[calc(100vh-4rem)] bg-gray-50">
+              <div className="max-w-7xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8">Tasks</h1>
+                <div>Loading...</div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </SessionCheck>
+    );
+  }
 
   return (
     <SessionCheck>
@@ -69,15 +79,15 @@ export default function TasksPage() {
           <main className="flex-1 p-8 min-h-[calc(100vh-4rem)] bg-gray-50">
             <div className="max-w-7xl mx-auto">
               <h1 className="text-3xl font-bold mb-8">Tasks</h1>
-              {status === 'loading' || loading ? (
+              {isLoading ? (
                 <div>Loading tasks...</div>
               ) : error ? (
-                <div className="text-red-500">Error: {error}</div>
-              ) : tasks.length === 0 ? (
+                <div className="text-red-500">Error: {error instanceof Error ? error.message : 'Failed to load tasks'}</div>
+              ) : !tasks?.length ? (
                 <div>No active tasks found.</div>
               ) : (
                 <div className="space-y-4">
-                  {tasks.map((task) => (
+                  {tasks.map((task: Task) => (
                     <Card key={task.Id} className="w-full mb-4 hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
