@@ -1,0 +1,23 @@
+PS C:\Users\David\MyCode\Duo Marketing\frontend> npm install @azure/msal-browser @azure/msal-react next-auth  
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE unable to resolve dependency tree    
+npm ERR!
+npm ERR! While resolving: frontend@0.1.0
+npm ERR! Found: react@19.0.0
+npm ERR! node_modules/react
+npm ERR!   react@"^19.0.0" from the root project       
+npm ERR!
+npm ERR! Could not resolve dependency:
+npm ERR! peer react@"^16.8.0 || ^17 || ^18" from @azure/msal-react@3.0.7
+npm ERR! node_modules/@azure/msal-react
+npm ERR!   @azure/msal-react@"*" from the root project 
+npm ERR!
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR!
+npm ERR!
+npm ERR! For a full report see:
+npm ERR! C:\Users\David\AppData\Local\npm-cache\_logs\2025-03-21T00_23_09_298Z-eresolve-report.txt
+
+npm ERR! A complete log of this run can be found in: C:\Users\David\AppData\Local\npm-cache\_logs\2025-03-21T00_23_09_298Z-debug-0.log

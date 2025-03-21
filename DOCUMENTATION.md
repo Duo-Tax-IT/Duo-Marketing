@@ -16,6 +16,26 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Environment variables stored in .env file (not committed to Git)
   - API proxy for Salesforce integration
 
+## Authentication
+- **Microsoft SSO Integration:**
+  - Uses NextAuth.js with Azure AD provider
+  - Includes login page with Microsoft sign-in button
+  - Protected routes with session checking
+  - Authentication state maintained across the application
+  - Configuration in .env.local file:
+    ```
+    NEXTAUTH_URL=http://localhost:3000
+    NEXTAUTH_SECRET=[secret key]
+    AZURE_AD_CLIENT_ID=[Azure app client ID]
+    AZURE_AD_CLIENT_SECRET=[Azure app client secret]
+    AZURE_AD_TENANT_ID=[Azure tenant ID]
+    ```
+  - Implemented components:
+    - `AuthProvider`: Wraps app with NextAuth session provider
+    - `SessionCheck`: Protects routes requiring authentication
+    - API route for NextAuth at `/api/auth/[...nextauth]`
+    - Login page at `/login` with Microsoft sign-in button
+
 ## Backend API Endpoints
 - **Health Check:**
   - `GET /api/health`

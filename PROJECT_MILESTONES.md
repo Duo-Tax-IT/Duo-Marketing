@@ -11,7 +11,7 @@ A task/project management web app for the marketing team with plans for future f
    - Deploy frontend on Vercel.✅
    - Deploy backend (API integration with Salesforce via Middleman API) on Render.✅
 3. **SSO Integration:**  
-   - Implement Microsoft Single Sign-On.❌
+   - Implement Microsoft Single Sign-On.✅
 4. **Core Components:**  
    - Develop navbar, sidebar, and other shared UI elements.❌
 5. **Future Enhancements:**  
