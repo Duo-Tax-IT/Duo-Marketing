@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import { JWT } from "next-auth/jwt";
 
 declare module "next-auth/jwt" {
   interface JWT {

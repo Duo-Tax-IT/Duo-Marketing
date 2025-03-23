@@ -14,11 +14,23 @@ A task/project management web app for the marketing team with plans for future f
    - Implement Microsoft Single Sign-On.✅
 4. **Core Components:**  
    - Homepage basic. ✅
-   - Develop navbar, sidebar, and other shared UI elements.❌
-5. **Pulling in data:**  
-   - Pull in Projects ❌
-6. **Future Enhancements:**  
-   - Iteratively add features (e.g., advanced task management, analytics, etc.).❌
+   - Develop navbar, sidebar, and other shared UI elements.✅
+   - Implement consistent card layout across pages.✅
+5. **Data Integration:**  
+   - Pull in Projects with open tasks✅
+   - Pull in non-completed Tasks✅
+   - Pull in pending Website Content✅
+6. **Performance Optimizations:**  
+   - Implement React Query for data fetching✅
+   - Add caching to prevent unnecessary API calls✅
+   - Optimize session handling and authentication flow✅
+7. **Future Enhancements:**  
+   - Add ability to mark tasks as complete❌
+   - Add ability to upload website content❌
+   - Add project details view❌
+   - Add task creation and assignment❌
+   - Add analytics dashboard❌
+   - Add email notifications❌
 
 ## Iterative Process
 - **After Each Session:** Update this file with completed milestones and mark it with ✅. Also add new milestones as they come in.

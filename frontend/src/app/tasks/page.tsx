@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 
 interface Task {
   Id: string;

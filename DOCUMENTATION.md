@@ -33,13 +33,57 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Implemented components:
     - `AuthProvider`: Wraps app with NextAuth session provider
     - `SessionCheck`: Protects routes requiring authentication
+    - `QueryProvider`: Provides React Query caching capabilities
     - API route for NextAuth at `/api/auth/[...nextauth]`
     - Login page at `/login` with Microsoft sign-in button
+
+## Data Fetching and Caching
+- **React Query Implementation:**
+  - Global configuration in `QueryProvider`:
+    - `staleTime: Infinity` - Data never becomes stale automatically
+    - `gcTime: 30 minutes` - Cache is kept for 30 minutes
+    - `refetchOnWindowFocus: false` - Prevents unnecessary refetches
+  - Query keys include session token for proper cache invalidation
+  - Optimized for performance with minimal API calls
+
+## Frontend Routes and Features
+- **Projects Page (`/projects`):**
+  - Displays active projects from Salesforce
+  - Query: `SELECT Id, Name FROM Marketing_Project__c WHERE Open_Tasks__c > 0`
+  - Cached data with React Query
+  - Simple card layout with project name and menu
+
+- **Tasks Page (`/tasks`):**
+  - Shows non-completed and non-cancelled tasks
+  - Query: `SELECT Id, Name FROM Marketing_Task__c WHERE Stage__c != 'Completed' AND Stage__c != 'Cancelled'`
+  - Cached data with React Query
+  - Card layout matching projects page
+
+- **Website Content Page (`/content`):**
+  - Lists content items not yet uploaded
+  - Query: `SELECT Id, Name FROM Marketing_Content__c WHERE Status__c != 'Uploaded'`
+  - Cached data with React Query
+  - Consistent card layout with other pages
 
 ## Backend API Endpoints
 - **Health Check:**
   - `GET /api/health`
   - Returns server status
+
+- **Projects API:**
+  - `GET /api/projects`
+  - Requires authentication token
+  - Returns active projects with open tasks
+
+- **Tasks API:**
+  - `GET /api/tasks`
+  - Requires authentication token
+  - Returns non-completed and non-cancelled tasks
+
+- **Content API:**
+  - `GET /api/content`
+  - Requires authentication token
+  - Returns content items not yet uploaded
 
 - **Salesforce Query Proxy:**
   - `POST /api/salesforce/query`
@@ -112,6 +156,17 @@ IMPORTANT: Always implement manual retry let user click to not exceed the api ca
 - Endpoints and flow details for authentication.
 
 ## UI Components
-- Navbar, Sidebar, etc. (Detailed responsibilities and props)
+- **Layout Components:**
+  - `Navbar`: Top navigation bar
+  - `Sidebar`: Navigation menu with links to all pages
+  - `SessionCheck`: Authentication wrapper component
+  - `Card`: Reusable card component for displaying items
+  - All components use Tailwind CSS for styling
+
+## Performance Optimizations
+- React Query for efficient data fetching and caching
+- Session token included in query keys for proper cache invalidation
+- Optimized re-renders with proper React hooks usage
+- Early returns for loading states to prevent unnecessary renders
 
 ## New Features (Add deatils about new features here)
