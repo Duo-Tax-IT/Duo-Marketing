@@ -25,6 +25,7 @@ A task/project management web app for the marketing team with plans for future f
    - Add caching to prevent unnecessary API calls✅
    - Optimize session handling and authentication flow✅
 7. **Future Enhancements:**  
+   - Implement Marketing Object component❌
    - Add ability to mark tasks as complete❌
    - Add ability to upload website content❌
    - Add project details view❌

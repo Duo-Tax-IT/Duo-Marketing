@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 // Tailwind-like color palette
@@ -24,6 +24,28 @@ interface DonutChartProps {
   totalCount: number;
 }
 
+interface LegendProps {
+  payload?: {
+    value: string;
+    color: string;
+    payload: {
+      value: number;
+    };
+  }[];
+}
+
+const CustomLegend = ({ payload = [] }: LegendProps) => {
+  return (
+    <ul className="list-none m-0 p-0">
+      {payload.map((entry, index) => (
+        <li key={`item-${index}`} className="text-sm">
+          <span style={{ color: entry.color }}>{entry.value} ({entry.payload.value})</span>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -31,15 +53,15 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
         <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
       </div>
       <CardContent className="pt-0">
-        <div className="h-[300px] w-full">
+        <div className="h-[280px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
-                cx={200}
-                cy={150}
-                innerRadius={70}
-                outerRadius={100}
+                cx="35%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
                 paddingAngle={2}
                 dataKey="value"
               >
@@ -54,20 +76,21 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                 formatter={(value: number) => [`${value} items`, 'Count']}
               />
               <Legend 
+                content={<CustomLegend />}
                 layout="vertical"
                 align="right"
-                verticalAlign="top"
+                verticalAlign="middle"
                 wrapperStyle={{
-                  top: 0,
-                  right: 20,
+                  right: 0,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
                   width: 'auto',
                   padding: 0
                 }}
-                formatter={(value: string) => `${value} (${data.find(item => item.name === value)?.value || 0})`}
               />
               <text
-                x={200}
-                y={150}
+                x="35%"
+                y="50%"
                 textAnchor="middle"
                 dominantBaseline="central"
                 style={{

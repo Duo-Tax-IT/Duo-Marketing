@@ -26,7 +26,7 @@ export async function GET() {
         'Authorization': `Bearer ${session.accessToken}`,
       },
       body: JSON.stringify({
-        query: "SELECT Id, Name FROM Marketing_Task__c WHERE Stage__c != 'Completed' AND Stage__c != 'Cancelled'"
+        query: "SELECT Id, Name, Type__c FROM Marketing_Task__c WHERE Stage__c != 'Completed' AND Stage__c != 'Cancelled'"
       }),
     });
 
