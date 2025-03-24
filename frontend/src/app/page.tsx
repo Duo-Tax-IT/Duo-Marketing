@@ -14,11 +14,6 @@ interface Stats {
   content: number;
 }
 
-interface ChartData {
-  name: string;
-  value: number;
-}
-
 interface DueTasksResponse {
   data: Array<{ name: string; value: number }>;
   totalCount: number;
