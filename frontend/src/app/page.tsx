@@ -20,7 +20,7 @@ interface ChartData {
 }
 
 interface DueTasksResponse {
-  data: ChartData[];
+  data: Array<{ name: string; value: number }>;
   totalCount: number;
 }
 
@@ -63,10 +63,14 @@ async function fetchDueTasks(token: string): Promise<DueTasksResponse> {
     throw new Error('Failed to fetch due tasks');
   }
 
+  interface TaskRecord {
+    Type__c: string;
+  }
+
   const data = await response.json();
 
   // Group by Type__c and count
-  const groupedByType = data.records.reduce((acc: Record<string, number>, task: any) => {
+  const groupedByType = data.records.reduce((acc: Record<string, number>, task: TaskRecord) => {
     const type = task.Type__c || 'Unspecified';
     acc[type] = (acc[type] || 0) + 1;
     return acc;
