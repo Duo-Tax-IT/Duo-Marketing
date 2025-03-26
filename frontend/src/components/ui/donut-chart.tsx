@@ -38,8 +38,14 @@ const CustomLegend = ({ payload = [] }: LegendProps) => {
   return (
     <ul className="list-none m-0 p-0">
       {payload.map((entry, index) => (
-        <li key={`item-${index}`} className="text-sm">
-          <span style={{ color: entry.color }}>{entry.value} ({entry.payload.value})</span>
+        <li key={`item-${index}`} className="text-sm flex items-center mb-1">
+          <span 
+            className="inline-block w-3 h-3 mr-2 rounded-full" 
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-black">
+            {entry.value} ({entry.payload.value})
+          </span>
         </li>
       ))}
     </ul>
@@ -53,15 +59,15 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
         <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
       </div>
       <CardContent className="pt-0">
-        <div className="h-[280px] w-full">
+        <div className="h-[280px] w-full relative">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
-                cx="35%"
+                cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={80}
+                innerRadius={80}
+                outerRadius={110}
                 paddingAngle={2}
                 dataKey="value"
               >
@@ -88,21 +94,13 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                   padding: 0
                 }}
               />
-              <text
-                x="35%"
-                y="50%"
-                textAnchor="middle"
-                dominantBaseline="central"
-                style={{
-                  fontSize: '24px',
-                  fontWeight: 'bold',
-                  fill: '#000000'
-                }}
-              >
-                {totalCount}
-              </text>
             </PieChart>
           </ResponsiveContainer>
+          
+          {/* Count overlay - absolutely positioned */}
+          <div className="absolute left-[38%] top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <span className="text-2xl font-bold">{totalCount}</span>
+          </div>
         </div>
       </CardContent>
     </Card>
