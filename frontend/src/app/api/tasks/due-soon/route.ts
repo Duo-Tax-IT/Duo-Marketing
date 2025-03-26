@@ -16,12 +16,13 @@ export async function GET(req: NextRequest) {
     const sevenDaysDate = sevenDaysFromNow.toISOString().split('T')[0];
 
     const query = `
-      SELECT Id, Name, Type__c 
+      SELECT Id, Name, Type__c, Delegate__r.Name, Deadline__c, Assigned_By__r.Name 
       FROM Marketing_Task__c 
       WHERE Stage__c != 'Completed' 
       AND Stage__c != 'Cancelled' 
       AND Deadline__c <= ${sevenDaysDate} 
       AND Deadline__c >= ${today}
+      ORDER BY Deadline__c ASC
     `;
 
     console.log('Debug - Query:', query);
