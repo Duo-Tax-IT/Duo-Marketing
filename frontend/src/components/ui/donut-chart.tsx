@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { RotateCcw } from "lucide-react";
@@ -176,9 +176,6 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                       />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    formatter={(value: number) => [`${value} items`, 'Count']}
-                  />
                   <Legend 
                     content={<CustomLegend />}
                     layout="vertical"
