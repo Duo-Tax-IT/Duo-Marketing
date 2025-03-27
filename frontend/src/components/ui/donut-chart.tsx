@@ -184,9 +184,12 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                 e.stopPropagation();
                 toggleView();
               }}
-              className="h-8 w-8 rounded-full hover:bg-gray-100"
+              className="group relative h-8 w-8 rounded-full hover:bg-gray-100 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
+              <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                Switch to table
+              </span>
             </Button>
           </div>
           
@@ -247,9 +250,12 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                 e.stopPropagation();
                 toggleView();
               }}
-              className="h-8 w-8 rounded-full hover:bg-gray-100"
+              className="group relative h-8 w-8 rounded-full hover:bg-gray-100 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
+              <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                Switch to pie graph
+              </span>
             </Button>
           </div>
           

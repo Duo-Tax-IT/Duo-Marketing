@@ -7,7 +7,7 @@ import { StatsCard } from "@/components/ui/stats-card";
 import { DonutChart } from "@/components/ui/donut-chart";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye } from "lucide-react";
 import { useState } from "react";
 
 interface Stats {
@@ -136,15 +136,16 @@ export default function DashboardPage() {
                 <h1 className="text-3xl font-bold mr-3">Dashboard</h1>
                 <button 
                   onClick={toggleTaskView} 
-                  className="group relative flex items-center justify-center focus:outline-none"
-                  title={viewMyTasksOnly ? "View all tasks" : "View your tasks"}
+                  className="group relative flex items-center justify-center focus:outline-none transition-colors cursor-pointer"
                 >
-                  {viewMyTasksOnly ? (
-                    <Eye className="h-6 w-6 text-yellow-500 hover:text-yellow-600" />
-                  ) : (
-                    <EyeOff className="h-6 w-6 text-gray-800 hover:text-gray-900" />
-                  )}
-                  <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <Eye 
+                    className={`h-6 w-6 transition-colors duration-200 ${
+                      viewMyTasksOnly 
+                        ? "text-yellow-500 hover:text-yellow-600" 
+                        : "text-gray-400 hover:text-gray-600"
+                    }`} 
+                  />
+                  <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                     {viewMyTasksOnly ? "View all tasks" : "View your tasks"}
                   </span>
                 </button>
