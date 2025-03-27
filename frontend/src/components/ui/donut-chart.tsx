@@ -234,7 +234,13 @@ export function DonutChart({
               
               {/* Position count exactly at the pie's center point */}
               <div className="absolute pointer-events-none" style={{ left: CHART_CENTER_X, top: '50%', transform: 'translate(-50%, -50%)' }}>
-                <span className="text-4xl font-bold">{totalCount}</span>
+                {totalCount > 0 ? (
+                  <span className="text-4xl font-bold">{totalCount}</span>
+                ) : (
+                  <div className="text-center">
+                    <span className="text-lg text-gray-500 whitespace-nowrap">There are no tasks</span>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>

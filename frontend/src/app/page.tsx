@@ -182,6 +182,51 @@ async function fetchOpenTasks(token: string, viewMyTasksOnly: boolean = false, u
   };
 }
 
+async function fetchDueToday(token: string, viewMyTasksOnly: boolean = false, userEmail: string = ''): Promise<DueTasksResponse> {
+  if (!token) return { data: [], totalCount: 0 };
+
+  const url = new URL('/api/tasks/due-today', window.location.origin);
+  
+  if (viewMyTasksOnly && userEmail) {
+    url.searchParams.append('viewMyTasksOnly', 'true');
+    url.searchParams.append('userEmail', userEmail);
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch tasks due today');
+  }
+
+  interface TaskRecord {
+    Type__c: string;
+  }
+
+  const data = await response.json();
+
+  // Group by Type__c and count
+  const groupedByType = data.records.reduce((acc: Record<string, number>, task: TaskRecord) => {
+    const type = task.Type__c || 'Unspecified';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Convert to chart data format
+  const chartData = Object.entries(groupedByType).map(([name, value]) => ({
+    name,
+    value: value as number
+  }));
+
+  return {
+    data: chartData,
+    totalCount: data.records.length
+  };
+}
+
 export default function DashboardPage() {
   const [viewMyTasksOnly, setViewMyTasksOnly] = useState(false);
   
@@ -221,6 +266,14 @@ export default function DashboardPage() {
   const { data: openTasks, isLoading: openTasksLoading, error: openTasksError } = useQuery<DueTasksResponse, Error>({
     queryKey: ['open-tasks', session?.accessToken, viewMyTasksOnly, userEmail],
     queryFn: () => fetchOpenTasks(session?.accessToken || '', viewMyTasksOnly, userEmail),
+    enabled: !!session?.accessToken,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 30, // 30 minutes
+  });
+
+  const { data: dueTodayTasks, isLoading: dueTodayLoading, error: dueTodayError } = useQuery<DueTasksResponse, Error>({
+    queryKey: ['due-today-tasks', session?.accessToken, viewMyTasksOnly, userEmail],
+    queryFn: () => fetchDueToday(session?.accessToken || '', viewMyTasksOnly, userEmail),
     enabled: !!session?.accessToken,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 30, // 30 minutes
@@ -326,6 +379,23 @@ export default function DashboardPage() {
                     totalCount={openTasks?.totalCount || 0}
                     endpoint={`/api/tasks/open${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
                     deadlineColumnLabel="Deadline"
+                  />
+                )}
+
+                {/* Tasks Due Today Donut Chart */}
+                {dueTodayLoading ? (
+                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
+                ) : dueTodayError ? (
+                  <div className="text-red-500">
+                    Error: {dueTodayError instanceof Error ? dueTodayError.message : 'Failed to load tasks due today'}
+                  </div>
+                ) : (
+                  <DonutChart
+                    title={`Tasks Due Today ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
+                    data={dueTodayTasks?.data || []}
+                    totalCount={dueTodayTasks?.totalCount || 0}
+                    endpoint={`/api/tasks/due-today${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
+                    deadlineColumnLabel="Due Today"
                   />
                 )}
               </div>
