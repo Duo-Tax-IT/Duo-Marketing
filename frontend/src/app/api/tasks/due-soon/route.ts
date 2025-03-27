@@ -16,7 +16,19 @@ export async function GET(req: NextRequest) {
     const sevenDaysDate = sevenDaysFromNow.toISOString().split('T')[0];
 
     const query = `
-      SELECT Id, Name, Type__c, Delegate__r.Name, Deadline__c, Assigned_By__r.Name 
+      SELECT 
+        Id, 
+        Name, 
+        Type__c, 
+        Description__c,
+        Priority__c,
+        Project__c,
+        Completed_Date__c,
+        Log_Note_Long__c,
+        Log__c,
+        Delegate__r.Name, 
+        Deadline__c, 
+        Assigned_By__r.Name 
       FROM Marketing_Task__c 
       WHERE Stage__c != 'Completed' 
       AND Stage__c != 'Cancelled' 

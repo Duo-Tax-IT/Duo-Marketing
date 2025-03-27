@@ -32,6 +32,7 @@ A task/project management web app for the marketing team with plans for future f
    - Add task creation and assignment❌
    - Add analytics dashboard (In Progress)
      - Tasks due in 7 days donut chart ✅
+     - Task detail modal with full information ✅
      - Additional analytics components ❌
    - Add email notifications❌
 

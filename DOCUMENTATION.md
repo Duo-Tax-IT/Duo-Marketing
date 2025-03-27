@@ -15,7 +15,11 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Shared interfaces and types across components
   - Key types:
     - `TaskDetail`: Interface for Salesforce task records
-      - Properties: Id, Name, Type__c, Delegate__r, Assigned_By__r, Deadline__c
+      - Properties:
+        - Basic Info: Id, Name, Type__c, Description__c, Priority__c
+        - Relations: Delegate__r, Assigned_By__r, Project__c
+        - Dates: Deadline__c, Completed_Date__c
+        - Notes: Log_Note_Long__c, Log__c
       - Used in task-related components and API responses
 
 - **Backend Setup:**
@@ -105,6 +109,11 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
     - `start`: YYYY-MM-DD (today's date)
     - `end`: YYYY-MM-DD (7 days from today)
   - Returns tasks due within the next 7 days, grouped by type
+  - Fields returned:
+    - Basic: Id, Name, Type__c, Description__c, Priority__c
+    - Relations: Delegate__r.Name, Assigned_By__r.Name, Project__c
+    - Dates: Deadline__c, Completed_Date__c
+    - Notes: Log_Note_Long__c, Log__c
   - Used by the DonutChart component for analytics
 
 ## API Integration
