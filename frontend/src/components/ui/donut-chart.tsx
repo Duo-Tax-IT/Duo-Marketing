@@ -31,6 +31,8 @@ interface DonutChartProps {
   title: string;
   data: ChartData[];
   totalCount: number;
+  endpoint?: string; // Optional API endpoint to use for fetching task details
+  deadlineColumnLabel?: string; // Optional label for the deadline column
 }
 
 interface LegendProps {
@@ -61,7 +63,13 @@ const CustomLegend = ({ payload = [] }: LegendProps) => {
   );
 };
 
-export function DonutChart({ title, data, totalCount }: DonutChartProps) {
+export function DonutChart({ 
+  title, 
+  data, 
+  totalCount, 
+  endpoint = '/api/tasks/due-soon',
+  deadlineColumnLabel = 'Deadline'
+}: DonutChartProps) {
   const [showDetailView, setShowDetailView] = useState(false);
   const [taskDetails, setTaskDetails] = useState<TaskDetail[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +106,9 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
     
     setIsLoading(true);
     try {
-      const response = await fetch('/api/tasks/due-soon', {
+      // Preserve the entire endpoint URL including any query parameters
+      console.log(`Fetching task details from: ${endpoint}`);
+      const response = await fetch(endpoint, {
         headers: {
           'Authorization': `Bearer ${session.accessToken}`
         }
@@ -107,7 +117,8 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
       if (!response.ok) {
         console.error('API response not OK:', {
           status: response.status,
-          statusText: response.statusText
+          statusText: response.statusText,
+          endpoint
         });
         try {
           const errorData = await response.text();
@@ -119,18 +130,18 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
       }
       
       const data = await response.json();
-      console.log('Task details response:', data);
+      console.log(`Task details response from ${endpoint}:`, data);
       if (data.records && data.records.length > 0) {
         console.log('First task example:', data.records[0]);
-        console.log('Delegate info exists:', !!data.records[0].Delegate__r);
-        console.log('Assigned By info exists:', !!data.records[0].Assigned_By__r);
+        console.log('Task type:', data.records[0].Type__c);
+        console.log('Task deadline:', data.records[0].Deadline__c);
       } else {
         console.log('No task records found in response');
       }
       
       setTaskDetails(data.records || []);
     } catch (error) {
-      console.error('Error fetching task details:', error);
+      console.error(`Error fetching task details from ${endpoint}:`, error);
     } finally {
       setIsLoading(false);
     }
@@ -205,11 +216,10 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                     content={<CustomLegend />}
                     layout="vertical"
                     align="right"
-                    verticalAlign="middle"
+                    verticalAlign="top"
                     wrapperStyle={{
                       right: 0,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
+                      top: 10,
                       width: 'auto',
                       padding: 0
                     }}
@@ -255,7 +265,7 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                   <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
               ) : taskDetails.length === 0 ? (
-                <div className="text-center py-10 text-gray-500">No tasks due soon</div>
+                <div className="text-center py-10 text-gray-500">No tasks found</div>
               ) : (
                 <div className="overflow-auto h-full rounded-lg">
                   <table className="w-full text-sm">
@@ -265,7 +275,7 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                         <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Name</th>
                         <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Assigned By</th>
                         <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Delegate</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Deadline</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">{deadlineColumnLabel}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
