@@ -1,11 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TaskDetailModal } from "@/components/ui/task-detail-modal";
 import { TaskDetail } from "@/types/task";
+
+// Fixed position for the center of the donut chart
+const CHART_CENTER_X = 140;
 
 // Tailwind-like color palette
 const COLORS = [
@@ -65,6 +68,8 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   const [selectedTask, setSelectedTask] = useState<TaskDetail | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
+  const [countPosition, setCountPosition] = useState({ x: 0, y: 0 });
+  const chartContainerRef = useRef<HTMLDivElement>(null);
 
   // Create a mapping of task types to colors
   const getTypeColor = (type: string) => {
@@ -140,6 +145,19 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
     return date.toLocaleDateString();
   };
 
+  // Calculate the position for the counter
+  useEffect(() => {
+    if (chartContainerRef.current) {
+      const containerWidth = chartContainerRef.current.clientWidth;
+      // The donut is positioned at the left portion of the container to make room for the legend
+      // We position the count within the donut, not centered in the full container
+      setCountPosition({
+        x: containerWidth * 0.32, // Position at approximately 32% from the left
+        y: chartContainerRef.current.clientHeight / 2
+      });
+    }
+  }, [chartContainerRef, data]);
+
   return (
     <div className="relative [perspective:1000px] h-[324px]">
       <TaskDetailModal 
@@ -176,12 +194,12 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
             <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
           </div>
           <CardContent className="pt-0">
-            <div className="h-[280px] w-full relative">
+            <div ref={chartContainerRef} className="h-[280px] w-full relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={data}
-                    cx="50%"
+                    cx={CHART_CENTER_X}
                     cy="50%"
                     innerRadius={85}
                     outerRadius={110}
@@ -211,7 +229,8 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                 </PieChart>
               </ResponsiveContainer>
               
-              <div className="absolute left-[38%] top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              {/* Position count exactly at the pie's center point */}
+              <div className="absolute pointer-events-none" style={{ left: CHART_CENTER_X, top: '50%', transform: 'translate(-50%, -50%)' }}>
                 <span className="text-4xl font-bold">{totalCount}</span>
               </div>
             </div>
