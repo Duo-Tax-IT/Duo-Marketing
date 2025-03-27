@@ -30,7 +30,9 @@ A task/project management web app for the marketing team with plans for future f
    - Add ability to upload website content❌
    - Add project details view❌
    - Add task creation and assignment❌
-   - Add analytics dashboard❌
+   - Add analytics dashboard (In Progress)
+     - Tasks due in 7 days donut chart ✅
+     - Additional analytics components ❌
    - Add email notifications❌
 
 ## Iterative Process

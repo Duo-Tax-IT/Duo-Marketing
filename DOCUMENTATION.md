@@ -90,6 +90,15 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Requires JSON body with `query` parameter
   - Proxies requests to Salesforce Middleman API with proper authentication
 
+- **Tasks Due Soon API:**
+  - `GET /api/tasks/due-soon`
+  - Requires authentication token
+  - Query params: 
+    - `start`: YYYY-MM-DD (today's date)
+    - `end`: YYYY-MM-DD (7 days from today)
+  - Returns tasks due within the next 7 days, grouped by type
+  - Used by the DonutChart component for analytics
+
 ## API Integration
 - **Salesforce/Middleman API:**  
   Details on authentication, endpoints, and data models.
@@ -162,6 +171,19 @@ IMPORTANT: Always implement manual retry let user click to not exceed the api ca
   - `SessionCheck`: Authentication wrapper component
   - `Card`: Reusable card component for displaying items
   - All components use Tailwind CSS for styling
+
+- **Analytics Components:**
+  - `DonutChart`: Interactive component showing tasks due in 7 days
+    - Features:
+      - Displays tasks categorized by type in a donut chart
+      - Shows total task count in the center
+      - Custom legend with task type counts
+      - 3D flip animation to detailed table view
+      - Rotate button in top-right corner for view toggle
+    - Props:
+      - `title`: string - Chart title
+      - `data`: Array<{ name: string, value: number }> - Task type counts
+      - `totalCount`: number - Total number of tasks
 
 ## Performance Optimizations
 - React Query for efficient data fetching and caching

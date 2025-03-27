@@ -73,6 +73,23 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
+  // Create a mapping of task types to colors
+  const getTypeColor = (type: string) => {
+    // Find the index of this type in our data array
+    const typeIndex = data.findIndex(item => item.name === type);
+    // If found, use that color, otherwise fallback to the first color
+    return typeIndex >= 0 ? COLORS[typeIndex % COLORS.length] : COLORS[0];
+  };
+
+  const getTypeStyles = (type: string) => {
+    const baseColor = getTypeColor(type);
+    return {
+      badge: `bg-${baseColor}/10`,
+      text: baseColor,
+      ring: `${baseColor}/20`
+    };
+  };
+
   const toggleView = () => {
     if (!showDetailView && taskDetails.length === 0) {
       fetchTaskDetails();
@@ -200,7 +217,7 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
         </Card>
 
         {/* Back side */}
-        <Card className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <Card className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
           <div className="absolute top-4 right-4 z-10">
             <Button
               variant="ghost"
@@ -215,48 +232,64 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
             </Button>
           </div>
           
-          <div className="p-4 h-full overflow-auto">
-            <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col h-full">
+            <div className="px-4 pt-4">
               <h3 className="text-xl font-semibold">{title}</h3>
             </div>
             
-            {isLoading ? (
-              <div className="flex justify-center items-center h-48">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-              </div>
-            ) : taskDetails.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">No tasks due soon</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="text-left p-2">Type</th>
-                      <th className="text-left p-2">Name</th>
-                      <th className="text-left p-2">Assigned By</th>
-                      <th className="text-left p-2">Delegate</th>
-                      <th className="text-left p-2">Deadline</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {taskDetails.map((task) => {
-                      // Debug - log the task object structure
-                      console.log('Task object:', JSON.stringify(task, null, 2));
-                      
-                      return (
-                        <tr key={task.Id} className="border-b hover:bg-gray-50">
-                          <td className="p-2">{task.Type__c || 'N/A'}</td>
-                          <td className="p-2">{task.Name}</td>
-                          <td className="p-2">{task.Assigned_By__r?.Name || 'N/A'}</td>
-                          <td className="p-2">{task.Delegate__r?.Name || 'N/A'}</td>
-                          <td className="p-2">{formatDate(task.Deadline__c)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <div className="flex-1 px-4 pb-4 overflow-hidden">
+              {isLoading ? (
+                <div className="flex justify-center items-center h-48">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              ) : taskDetails.length === 0 ? (
+                <div className="text-center py-10 text-gray-500">No tasks due soon</div>
+              ) : (
+                <div className="overflow-auto h-full rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead className="sticky top-0 bg-white">
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Type</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Name</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Assigned By</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Delegate</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs uppercase tracking-wider">Deadline</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {taskDetails.map((task) => {
+                        const typeStyles = getTypeStyles(task.Type__c);
+                        
+                        return (
+                          <tr key={task.Id} className="hover:bg-gray-50/50">
+                            <td className="py-3 px-4">
+                              <span 
+                                className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                                style={{
+                                  backgroundColor: `${typeStyles.badge}`,
+                                  color: typeStyles.text,
+                                  borderColor: typeStyles.ring
+                                }}
+                              >
+                                {task.Type__c || 'N/A'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 font-medium text-gray-900">{task.Name}</td>
+                            <td className="py-3 px-4 text-gray-600">{task.Assigned_By__r?.Name || 'N/A'}</td>
+                            <td className="py-3 px-4 text-gray-600">{task.Delegate__r?.Name || 'N/A'}</td>
+                            <td className="py-3 px-4">
+                              <span className="text-gray-900 font-medium">
+                                {formatDate(task.Deadline__c)}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
         </Card>
       </div>
