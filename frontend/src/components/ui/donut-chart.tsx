@@ -46,20 +46,25 @@ interface LegendProps {
 }
 
 const CustomLegend = ({ payload = [] }: LegendProps) => {
+  // Calculate max height based on number of items
+  const needsScroll = payload.length > 11;
+  
   return (
-    <ul className="list-none m-0 p-0">
-      {payload.map((entry, index) => (
-        <li key={`item-${index}`} className="text-sm flex items-center mb-1">
-          <span 
-            className="inline-block w-3 h-3 mr-2 rounded-full" 
-            style={{ backgroundColor: entry.color }}
-          />
-          <span className="text-black">
-            {entry.value} ({entry.payload.value})
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className={`${needsScroll ? 'max-h-[220px] overflow-y-auto pr-2 custom-scrollbar' : ''}`}>
+      <ul className="list-none m-0 p-0">
+        {payload.map((entry, index) => (
+          <li key={`item-${index}`} className="text-sm flex items-center mb-1">
+            <span 
+              className="inline-block w-3 h-3 mr-2 rounded-full" 
+              style={{ backgroundColor: entry.color }}
+            />
+            <span className="text-black">
+              {entry.value} ({entry.payload.value})
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

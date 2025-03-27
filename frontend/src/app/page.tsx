@@ -137,6 +137,51 @@ async function fetchOverdueTasks(token: string, viewMyTasksOnly: boolean = false
   };
 }
 
+async function fetchOpenTasks(token: string, viewMyTasksOnly: boolean = false, userEmail: string = ''): Promise<DueTasksResponse> {
+  if (!token) return { data: [], totalCount: 0 };
+
+  const url = new URL('/api/tasks/open', window.location.origin);
+  
+  if (viewMyTasksOnly && userEmail) {
+    url.searchParams.append('viewMyTasksOnly', 'true');
+    url.searchParams.append('userEmail', userEmail);
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch open tasks');
+  }
+
+  interface TaskRecord {
+    Type__c: string;
+  }
+
+  const data = await response.json();
+
+  // Group by Type__c and count
+  const groupedByType = data.records.reduce((acc: Record<string, number>, task: TaskRecord) => {
+    const type = task.Type__c || 'Unspecified';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Convert to chart data format
+  const chartData = Object.entries(groupedByType).map(([name, value]) => ({
+    name,
+    value: value as number
+  }));
+
+  return {
+    data: chartData,
+    totalCount: data.records.length
+  };
+}
+
 export default function DashboardPage() {
   const [viewMyTasksOnly, setViewMyTasksOnly] = useState(false);
   
@@ -168,6 +213,14 @@ export default function DashboardPage() {
   const { data: overdueTasks, isLoading: overdueTasksLoading, error: overdueTasksError } = useQuery<DueTasksResponse, Error>({
     queryKey: ['overdue-tasks', session?.accessToken, viewMyTasksOnly, userEmail],
     queryFn: () => fetchOverdueTasks(session?.accessToken || '', viewMyTasksOnly, userEmail),
+    enabled: !!session?.accessToken,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 30, // 30 minutes
+  });
+
+  const { data: openTasks, isLoading: openTasksLoading, error: openTasksError } = useQuery<DueTasksResponse, Error>({
+    queryKey: ['open-tasks', session?.accessToken, viewMyTasksOnly, userEmail],
+    queryFn: () => fetchOpenTasks(session?.accessToken || '', viewMyTasksOnly, userEmail),
     enabled: !!session?.accessToken,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 30, // 30 minutes
@@ -256,6 +309,23 @@ export default function DashboardPage() {
                     totalCount={overdueTasks?.totalCount || 0}
                     endpoint={`/api/tasks/overdue${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
                     deadlineColumnLabel="Overdue Since"
+                  />
+                )}
+
+                {/* All Open Tasks Donut Chart */}
+                {openTasksLoading ? (
+                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
+                ) : openTasksError ? (
+                  <div className="text-red-500">
+                    Error: {openTasksError instanceof Error ? openTasksError.message : 'Failed to load open tasks'}
+                  </div>
+                ) : (
+                  <DonutChart
+                    title={`All Open Tasks ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
+                    data={openTasks?.data || []}
+                    totalCount={openTasks?.totalCount || 0}
+                    endpoint={`/api/tasks/open${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
+                    deadlineColumnLabel="Deadline"
                   />
                 )}
               </div>
