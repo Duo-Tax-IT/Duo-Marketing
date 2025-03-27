@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -109,7 +109,7 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
         try {
           const errorData = await response.text();
           console.error('Error response body:', errorData);
-        } catch (err) {
+        } catch {
           console.error('Failed to read error response');
         }
         throw new Error(`Failed to fetch task details: ${response.status} ${response.statusText}`);
