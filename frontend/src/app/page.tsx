@@ -331,24 +331,7 @@ export default function DashboardPage() {
 
               {/* Charts Section */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Due Tasks Donut Chart */}
-                {dueTasksLoading ? (
-                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
-                ) : dueTasksError ? (
-                  <div className="text-red-500">
-                    Error: {dueTasksError instanceof Error ? dueTasksError.message : 'Failed to load due tasks'}
-                  </div>
-                ) : (
-                  <DonutChart
-                    title={`Tasks Due in 7 Days ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
-                    data={dueTasks?.data || []}
-                    totalCount={dueTasks?.totalCount || 0}
-                    endpoint={`/api/tasks/due-soon${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
-                    deadlineColumnLabel="Deadline"
-                  />
-                )}
-
-                {/* Overdue Tasks Donut Chart */}
+                {/* Overdue Tasks Donut Chart - Top Left */}
                 {overdueTasksLoading ? (
                   <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
                 ) : overdueTasksError ? (
@@ -365,24 +348,7 @@ export default function DashboardPage() {
                   />
                 )}
 
-                {/* All Open Tasks Donut Chart */}
-                {openTasksLoading ? (
-                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
-                ) : openTasksError ? (
-                  <div className="text-red-500">
-                    Error: {openTasksError instanceof Error ? openTasksError.message : 'Failed to load open tasks'}
-                  </div>
-                ) : (
-                  <DonutChart
-                    title={`All Open Tasks ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
-                    data={openTasks?.data || []}
-                    totalCount={openTasks?.totalCount || 0}
-                    endpoint={`/api/tasks/open${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
-                    deadlineColumnLabel="Deadline"
-                  />
-                )}
-
-                {/* Tasks Due Today Donut Chart */}
+                {/* Tasks Due Today Donut Chart - Top Right */}
                 {dueTodayLoading ? (
                   <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
                 ) : dueTodayError ? (
@@ -396,6 +362,40 @@ export default function DashboardPage() {
                     totalCount={dueTodayTasks?.totalCount || 0}
                     endpoint={`/api/tasks/due-today${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
                     deadlineColumnLabel="Due Today"
+                  />
+                )}
+
+                {/* Due Tasks Donut Chart - Bottom Left */}
+                {dueTasksLoading ? (
+                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
+                ) : dueTasksError ? (
+                  <div className="text-red-500">
+                    Error: {dueTasksError instanceof Error ? dueTasksError.message : 'Failed to load due tasks'}
+                  </div>
+                ) : (
+                  <DonutChart
+                    title={`Tasks Due in 7 Days ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
+                    data={dueTasks?.data || []}
+                    totalCount={dueTasks?.totalCount || 0}
+                    endpoint={`/api/tasks/due-soon${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
+                    deadlineColumnLabel="Deadline"
+                  />
+                )}
+
+                {/* All Open Tasks Donut Chart - Bottom Right */}
+                {openTasksLoading ? (
+                  <div className="h-[400px] bg-gray-200 animate-pulse rounded-lg" />
+                ) : openTasksError ? (
+                  <div className="text-red-500">
+                    Error: {openTasksError instanceof Error ? openTasksError.message : 'Failed to load open tasks'}
+                  </div>
+                ) : (
+                  <DonutChart
+                    title={`All Open Tasks ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
+                    data={openTasks?.data || []}
+                    totalCount={openTasks?.totalCount || 0}
+                    endpoint={`/api/tasks/open${viewMyTasksOnly ? `?viewMyTasksOnly=true&userEmail=${encodeURIComponent(userEmail)}` : ''}`}
+                    deadlineColumnLabel="Deadline"
                   />
                 )}
               </div>
