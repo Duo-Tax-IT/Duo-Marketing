@@ -2,6 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Tailwind-like color palette
 const COLORS = [
@@ -129,10 +131,23 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   };
 
   return (
-    <Card 
-      className="hover:shadow-lg transition-shadow cursor-pointer" 
-      onClick={toggleView}
-    >
+    <Card className="relative">
+      <div className="absolute top-4 right-4 z-10">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleView();
+          }}
+          className="h-8 w-8 rounded-full hover:bg-gray-100"
+        >
+          <RotateCcw
+            className={`h-4 w-4 transition-transform duration-200 ${showDetailView ? 'rotate-180' : ''}`}
+          />
+        </Button>
+      </div>
+      
       {!showDetailView ? (
         <>
           <div className="px-6 pt-4">
