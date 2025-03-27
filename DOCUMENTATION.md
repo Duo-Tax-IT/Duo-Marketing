@@ -10,6 +10,14 @@ A web app for managing marketing tasks and projects, built with Next.js and Tail
   - Import alias configured as `@/*` for clean imports
   - Currently displays basic "Duo Marketing" homepage
 
+- **TypeScript Types:**
+  - Located in `/src/types` directory
+  - Shared interfaces and types across components
+  - Key types:
+    - `TaskDetail`: Interface for Salesforce task records
+      - Properties: Id, Name, Type__c, Delegate__r, Assigned_By__r, Deadline__c
+      - Used in task-related components and API responses
+
 - **Backend Setup:**
   - Node.js Express server with TypeScript
   - Runs on port 3001 (configured in .env)
@@ -180,10 +188,23 @@ IMPORTANT: Always implement manual retry let user click to not exceed the api ca
       - Custom legend with task type counts
       - 3D flip animation to detailed table view
       - Rotate button in top-right corner for view toggle
+      - Clickable table rows that open task details
     - Props:
       - `title`: string - Chart title
       - `data`: Array<{ name: string, value: number }> - Task type counts
       - `totalCount`: number - Total number of tasks
+
+- **Task Components:**
+  - `TaskDetailModal`: Modal component for viewing/editing task details
+    - Features:
+      - Opens when clicking a task row in the table
+      - Displays task name in the header
+      - Responsive design with proper animations
+      - Close button in top-right corner
+    - Props:
+      - `task`: TaskDetail | null - The task to display
+      - `isOpen`: boolean - Controls modal visibility
+      - `onClose`: () => void - Handler for modal close
 
 ## Performance Optimizations
 - React Query for efficient data fetching and caching

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TaskDetailModal } from "@/components/ui/task-detail-modal";
+import { TaskDetail } from "@/types/task";
 
 // Tailwind-like color palette
 const COLORS = [
@@ -38,17 +40,6 @@ interface LegendProps {
   }[];
 }
 
-interface TaskDetail {
-  Id: string;
-  Name: string;
-  Type__c: string;
-  Delegate__r?: { Name: string } | null;
-  Assigned_By__r?: { Name: string } | null;
-  Deadline__c: string;
-  attributes?: any;
-  [key: string]: any; // Allow any other fields
-}
-
 const CustomLegend = ({ payload = [] }: LegendProps) => {
   return (
     <ul className="list-none m-0 p-0">
@@ -71,6 +62,8 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   const [showDetailView, setShowDetailView] = useState(false);
   const [taskDetails, setTaskDetails] = useState<TaskDetail[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<TaskDetail | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
 
   // Create a mapping of task types to colors
@@ -149,6 +142,15 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
 
   return (
     <div className="relative [perspective:1000px] h-[324px]">
+      <TaskDetailModal 
+        task={selectedTask}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedTask(null);
+        }}
+      />
+      
       <div
         className={`w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${
           showDetailView ? '[transform:rotateY(180deg)]' : ''
@@ -261,7 +263,14 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                         const typeStyles = getTypeStyles(task.Type__c);
                         
                         return (
-                          <tr key={task.Id} className="hover:bg-gray-50/50">
+                          <tr 
+                            key={task.Id} 
+                            onClick={() => {
+                              setSelectedTask(task);
+                              setIsModalOpen(true);
+                            }}
+                            className="hover:bg-gray-100 cursor-pointer transition-colors"
+                          >
                             <td className="py-3 px-4">
                               <span 
                                 className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
