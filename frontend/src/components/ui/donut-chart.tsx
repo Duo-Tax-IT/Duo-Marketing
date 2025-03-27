@@ -131,25 +131,28 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
   };
 
   return (
-    <Card className="relative">
-      <div className="absolute top-4 right-4 z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleView();
-          }}
-          className="h-8 w-8 rounded-full hover:bg-gray-100"
-        >
-          <RotateCcw
-            className={`h-4 w-4 transition-transform duration-200 ${showDetailView ? 'rotate-180' : ''}`}
-          />
-        </Button>
-      </div>
-      
-      {!showDetailView ? (
-        <>
+    <div className="relative [perspective:1000px] h-[324px]">
+      <div
+        className={`w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${
+          showDetailView ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* Front side */}
+        <Card className="absolute w-full h-full [backface-visibility:hidden]">
+          <div className="absolute top-4 right-4 z-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleView();
+              }}
+              className="h-8 w-8 rounded-full hover:bg-gray-100"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          
           <div className="px-6 pt-4">
             <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
           </div>
@@ -192,58 +195,74 @@ export function DonutChart({ title, data, totalCount }: DonutChartProps) {
                 </PieChart>
               </ResponsiveContainer>
               
-              {/* Count overlay - absolutely positioned */}
               <div className="absolute left-[38%] top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <span className="text-4xl font-bold">{totalCount}</span>
               </div>
             </div>
           </CardContent>
-        </>
-      ) : (
-        <div className="p-4 max-h-[324px] overflow-auto">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold">{title}</h3>
+        </Card>
+
+        {/* Back side */}
+        <Card className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="absolute top-4 right-4 z-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleView();
+              }}
+              className="h-8 w-8 rounded-full hover:bg-gray-100"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
           
-          {isLoading ? (
-            <div className="flex justify-center items-center h-48">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="p-4 h-full overflow-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold">{title}</h3>
             </div>
-          ) : taskDetails.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">No tasks due soon</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="text-left p-2">Type</th>
-                    <th className="text-left p-2">Name</th>
-                    <th className="text-left p-2">Assigned By</th>
-                    <th className="text-left p-2">Delegate</th>
-                    <th className="text-left p-2">Deadline</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {taskDetails.map((task) => {
-                    // Debug - log the task object structure
-                    console.log('Task object:', JSON.stringify(task, null, 2));
-                    
-                    return (
-                      <tr key={task.Id} className="border-b hover:bg-gray-50">
-                        <td className="p-2">{task.Type__c || 'N/A'}</td>
-                        <td className="p-2">{task.Name}</td>
-                        <td className="p-2">{task.Assigned_By__r?.Name || 'N/A'}</td>
-                        <td className="p-2">{task.Delegate__r?.Name || 'N/A'}</td>
-                        <td className="p-2">{formatDate(task.Deadline__c)}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-    </Card>
+            
+            {isLoading ? (
+              <div className="flex justify-center items-center h-48">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            ) : taskDetails.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">No tasks due soon</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="text-left p-2">Type</th>
+                      <th className="text-left p-2">Name</th>
+                      <th className="text-left p-2">Assigned By</th>
+                      <th className="text-left p-2">Delegate</th>
+                      <th className="text-left p-2">Deadline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {taskDetails.map((task) => {
+                      // Debug - log the task object structure
+                      console.log('Task object:', JSON.stringify(task, null, 2));
+                      
+                      return (
+                        <tr key={task.Id} className="border-b hover:bg-gray-50">
+                          <td className="p-2">{task.Type__c || 'N/A'}</td>
+                          <td className="p-2">{task.Name}</td>
+                          <td className="p-2">{task.Assigned_By__r?.Name || 'N/A'}</td>
+                          <td className="p-2">{task.Delegate__r?.Name || 'N/A'}</td>
+                          <td className="p-2">{formatDate(task.Deadline__c)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 } 
