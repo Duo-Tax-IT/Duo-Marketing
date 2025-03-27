@@ -7,6 +7,8 @@ import { StatsCard } from "@/components/ui/stats-card";
 import { DonutChart } from "@/components/ui/donut-chart";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 interface Stats {
   projects: number;
@@ -45,10 +47,17 @@ async function fetchStats(token: string): Promise<Stats> {
   };
 }
 
-async function fetchDueTasks(token: string): Promise<DueTasksResponse> {
+async function fetchDueTasks(token: string, viewMyTasksOnly: boolean = false, userEmail: string = ''): Promise<DueTasksResponse> {
   if (!token) return { data: [], totalCount: 0 };
 
-  const response = await fetch('/api/tasks/due-soon', {
+  const url = new URL('/api/tasks/due-soon', window.location.origin);
+  
+  if (viewMyTasksOnly && userEmail) {
+    url.searchParams.append('viewMyTasksOnly', 'true');
+    url.searchParams.append('userEmail', userEmail);
+  }
+
+  const response = await fetch(url.toString(), {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -84,12 +93,16 @@ async function fetchDueTasks(token: string): Promise<DueTasksResponse> {
 }
 
 export default function DashboardPage() {
+  const [viewMyTasksOnly, setViewMyTasksOnly] = useState(false);
+  
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       return;
     }
   });
+
+  const userEmail = session?.user?.email || '';
 
   const { data: stats, isLoading: statsLoading, error: statsError } = useQuery<Stats, Error>({
     queryKey: ['dashboard-stats', session?.accessToken],
@@ -100,12 +113,16 @@ export default function DashboardPage() {
   });
 
   const { data: dueTasks, isLoading: dueTasksLoading, error: dueTasksError } = useQuery<DueTasksResponse, Error>({
-    queryKey: ['due-tasks', session?.accessToken],
-    queryFn: () => fetchDueTasks(session?.accessToken || ''),
+    queryKey: ['due-tasks', session?.accessToken, viewMyTasksOnly, userEmail],
+    queryFn: () => fetchDueTasks(session?.accessToken || '', viewMyTasksOnly, userEmail),
     enabled: !!session?.accessToken,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 30, // 30 minutes
   });
+
+  const toggleTaskView = () => {
+    setViewMyTasksOnly(!viewMyTasksOnly);
+  };
 
   return (
     <SessionCheck>
@@ -115,7 +132,23 @@ export default function DashboardPage() {
           <Sidebar />
           <main className="flex-1 p-8 min-h-[calc(100vh-4rem)] bg-gray-50">
             <div className="max-w-7xl mx-auto space-y-8">
-              <h1 className="text-3xl font-bold">Dashboard</h1>
+              <div className="flex items-center">
+                <h1 className="text-3xl font-bold mr-3">Dashboard</h1>
+                <button 
+                  onClick={toggleTaskView} 
+                  className="group relative flex items-center justify-center focus:outline-none"
+                  title={viewMyTasksOnly ? "View all tasks" : "View your tasks"}
+                >
+                  {viewMyTasksOnly ? (
+                    <Eye className="h-6 w-6 text-yellow-500 hover:text-yellow-600" />
+                  ) : (
+                    <EyeOff className="h-6 w-6 text-gray-800 hover:text-gray-900" />
+                  )}
+                  <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    {viewMyTasksOnly ? "View all tasks" : "View your tasks"}
+                  </span>
+                </button>
+              </div>
               
               {/* Stats Cards */}
               {statsLoading ? (
@@ -147,7 +180,7 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <DonutChart
-                    title="Tasks Due in 7 Days"
+                    title={`Tasks Due in 7 Days ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
                     data={dueTasks?.data || []}
                     totalCount={dueTasks?.totalCount || 0}
                   />
