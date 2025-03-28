@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -82,6 +82,12 @@ export function DonutChart({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
 
+  useEffect(() => {
+    if (showDetailView) {
+      fetchTaskDetails();
+    }
+  }, [endpoint, showDetailView]);
+
   // Create a mapping of task types to colors
   const getTypeColor = (type: string) => {
     // Find the index of this type in our data array
@@ -100,10 +106,10 @@ export function DonutChart({
   };
 
   const toggleView = () => {
-    if (!showDetailView && taskDetails.length === 0) {
+    setShowDetailView(!showDetailView);
+    if (!showDetailView) {
       fetchTaskDetails();
     }
-    setShowDetailView(!showDetailView);
   };
 
   const fetchTaskDetails = async () => {
