@@ -6,6 +6,7 @@ import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TaskDetailModal } from "@/components/ui/task-detail-modal";
 import { TaskDetail } from "@/types/task";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Fixed position for the center of the donut chart
 const CHART_CENTER_X = 140;
@@ -75,12 +76,26 @@ export function DonutChart({
   endpoint = '/api/tasks/due-soon',
   deadlineColumnLabel = 'Deadline'
 }: DonutChartProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showDetailView, setShowDetailView] = useState(false);
   const [taskDetails, setTaskDetails] = useState<TaskDetail[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTask, setSelectedTask] = useState<TaskDetail | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
+
+  // Handle URL params for modal
+  useEffect(() => {
+    const taskId = searchParams.get('taskId');
+    if (taskId && taskDetails.length > 0) {
+      const task = taskDetails.find(t => t.Id === taskId);
+      if (task) {
+        setSelectedTask(task);
+        setIsModalOpen(true);
+      }
+    }
+  }, [searchParams, taskDetails]);
 
   useEffect(() => {
     if (showDetailView) {
@@ -165,15 +180,30 @@ export function DonutChart({
     return date.toLocaleDateString();
   };
 
+  const handleOpenModal = (task: TaskDetail) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+    // Update URL with task ID
+    const params = new URLSearchParams(window.location.search);
+    params.set('taskId', task.Id);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTask(null);
+    // Remove taskId from URL
+    const params = new URLSearchParams(window.location.search);
+    params.delete('taskId');
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <div className="relative [perspective:1000px] h-[324px]">
       <TaskDetailModal 
         task={selectedTask}
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedTask(null);
-        }}
+        onClose={handleCloseModal}
       />
       
       <div
@@ -306,10 +336,7 @@ export function DonutChart({
                         return (
                           <tr 
                             key={task.Id} 
-                            onClick={() => {
-                              setSelectedTask(task);
-                              setIsModalOpen(true);
-                            }}
+                            onClick={() => handleOpenModal(task)}
                             className="hover:bg-gray-100 cursor-pointer transition-colors"
                           >
                             <td className="py-3 px-4">
