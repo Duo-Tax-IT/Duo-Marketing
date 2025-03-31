@@ -354,7 +354,7 @@ export default function DashboardPage() {
                 ) : dueTodayError ? (
                   <div className="text-red-500">
                     Error: {dueTodayError instanceof Error ? dueTodayError.message : 'Failed to load tasks due today'}
-                  </div>
+        </div>
                 ) : (
                   <DonutChart
                     title={`Tasks Due Today ${viewMyTasksOnly ? '(Your Tasks)' : ''}`}
@@ -402,7 +402,7 @@ export default function DashboardPage() {
             </div>
           </main>
         </div>
-      </div>
+    </div>
     </SessionCheck>
   );
 }

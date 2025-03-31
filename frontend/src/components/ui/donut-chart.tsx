@@ -191,12 +191,14 @@ export function DonutChart({
                 e.stopPropagation();
                 toggleView();
               }}
-              className="group relative h-8 w-8 rounded-full hover:bg-gray-100 cursor-pointer"
+              className="group relative h-8 w-8 p-0 hover:bg-gray-100 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
-              <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                Switch to table
-              </span>
+              <div className="pointer-events-none absolute left-1/2 transform -translate-x-1/2 top-full mt-1 z-50">
+                <span className="px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Switch to table
+                </span>
+              </div>
             </Button>
           </div>
           
@@ -254,7 +256,7 @@ export function DonutChart({
 
         {/* Back side */}
         <Card className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
-          <div className="absolute top-4 right-4 z-10">
+          <div className="absolute top-4 right-4 z-50">
             <Button
               variant="ghost"
               size="icon"
@@ -262,16 +264,18 @@ export function DonutChart({
                 e.stopPropagation();
                 toggleView();
               }}
-              className="group relative h-8 w-8 rounded-full hover:bg-gray-100 cursor-pointer"
+              className="group relative h-8 w-8 p-0 hover:bg-gray-100 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
-              <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                Switch to pie graph
-              </span>
+              <div className="pointer-events-none absolute right-0 top-full mt-1 z-50">
+                <span className="px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Switch to pie graph
+                </span>
+              </div>
             </Button>
           </div>
           
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full overflow-hidden">
             <div className="px-4 pt-4">
               <h3 className="text-xl font-semibold">{title}</h3>
             </div>
